@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: ping360_ROS
+Description: Description of ping360_ROS
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

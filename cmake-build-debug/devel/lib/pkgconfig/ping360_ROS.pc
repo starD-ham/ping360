@@ -1,0 +1,8 @@
+prefix=/home/hamada/catkin_ws/src/ping360/cmake-build-debug/devel
+
+Name: ping360_ROS
+Description: Description of ping360_ROS
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

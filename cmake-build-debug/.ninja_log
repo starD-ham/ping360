@@ -1,0 +1,4 @@
+# ninja log v5
+1	658	1661900485906404898	build.ninja	b762a690ac1348e4
+0	33	0	CMakeFiles/clean_test_results	41ccdb05c6c719fc
+0	33	0	/home/hamada/catkin_ws/src/ping360/cmake-build-debug/CMakeFiles/clean_test_results	41ccdb05c6c719fc
