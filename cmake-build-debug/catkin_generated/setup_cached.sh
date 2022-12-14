@@ -11,4 +11,4 @@ export CMAKE_PREFIX_PATH="/home/hamada/catkin_ws/src/ping360/cmake-build-debug/d
 export LD_LIBRARY_PATH="/home/hamada/catkin_ws/src/ping360/cmake-build-debug/devel/lib:$LD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="/home/hamada/catkin_ws/src/ping360/cmake-build-debug/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
 export ROSLISP_PACKAGE_DIRECTORIES="/home/hamada/catkin_ws/src/ping360/cmake-build-debug/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
-export ROS_PACKAGE_PATH='/home/hamada/catkin_ws/src/ping360_ROS:/home/hamada/catkin_ws/src/ping360:/home/hamada/catkin_ws/src/kyubic_localization:/home/hamada/catkin_ws/src/kyubic_msgs:/home/hamada/catkin_ws/src/behavior_ac:/home/hamada/catkin_ws/src/kyubic_behavior:/home/hamada/catkin_ws/src/kyubic_control:/home/hamada/catkin_ws/src/kyubic_interface:/home/hamada/catkin_ws/src/ping360_ROS:/home/hamada/catkin_ws/src/ping360_sonar:/home/hamada/catkin_ws/src/test:/opt/ros/noetic/share'
+export ROS_PACKAGE_PATH="/home/hamada/catkin_ws/src/ping360_ROS:/home/hamada/catkin_ws/src/ping360:$ROS_PACKAGE_PATH"
