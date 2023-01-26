@@ -15,7 +15,8 @@ PingImage_node::PingImage_node() {
 }
 
 void PingImage_node::echoCb(const Original_msgs::Ping360::ConstPtr &msg) {
-    active_time=ros::Time::now();
+    ROS_INFO("Received echo");
+    //active_time=ros::Time::now();
     float linear_factor=msg->intensities.size()/float(center[0]);//中央までのデータ数
     int point_color;// 色の値
 
@@ -26,10 +27,7 @@ void PingImage_node::echoCb(const Original_msgs::Ping360::ConstPtr &msg) {
         else{
             point_color=0;
         }
-        if(point_color<0){
-            point_color=0;
-        }
-        for(int k=0;k<1;k++){//先の4角度分を同じ色として色塗りしておく
+        for(int k=0;k<2;k++){//先の4角度分を同じ色として色塗りしておく
             float theta=2* this->pi*(msg->angle+k)/400.0;
             float x = float(i)*cos(theta);
             float y = float(i)*sin(theta);
@@ -37,37 +35,40 @@ void PingImage_node::echoCb(const Original_msgs::Ping360::ConstPtr &msg) {
             // 描画　描画位置はズレていたため調整
             mat_image.at<cv::Vec2b>(int(center[0]+x),int(center[1]+y/2+center[1]/2))=point_color;
         }
-
-        publishImage();
     }
+    if(msg->angle==399){
+        cv::imwrite("/home/hamada/catkin_ws/src/ping360/image/"+std::to_string(ros::Time::now().sec)+".jpg",mat_image);
+    }
+    publishImage();
     state="ACTIVE";
 }
 
 void PingImage_node::publishImage() {
 
-
-    // カラーマップの描画
+// カラーマップの描画
     cv::Mat jet_img;
     cv::applyColorMap(mat_image,jet_img,cv::COLORMAP_JET);
-    // 距離を示す円の描画
-    cv::circle(jet_img,cv::Point(int(center[0]),int(center[1])),x_reso/2,cv::Scalar(255,255,255));
-    cv::circle(jet_img,cv::Point(int(center[0]),int(center[1])),x_reso/3,cv::Scalar(255,255,255));
-    cv::circle(jet_img,cv::Point(int(center[0]),int(center[1])),x_reso/6,cv::Scalar(255,255,255));
-    // 角度を表す線の描画
-    cv::line(jet_img,cv::Point(int(center[0]),0),cv::Point(int(center[0]),int(2*center[1])),cv::Scalar(255,255,255));
-    cv::line(jet_img,cv::Point(0,int(center[1])),cv::Point(int(2*center[0]),int(center[1])),cv::Scalar(255,255,255));
-    cv::line(jet_img,cv::Point(int(center[0])+int(center[0])*cos(pi/4),int(center[1])+int(center[1])*sin(pi/4)),cv::Point(int(center[0])-int(center[0])*cos(pi/4),int(center[1])-int(center[1])*sin(pi/4)),cv::Scalar(255,255,255));
-    cv::line(jet_img,cv::Point(int(center[0])+int(center[0])*cos(pi/4),int(center[1])-int(center[1])*sin(pi/4)),cv::Point(int(center[0])-int(center[0])*cos(pi/4),int(center[1])+int(center[1])*sin(pi/4)),cv::Scalar(255,255,255));
 
-    //ガウシアン
-    cv::Mat gaussian;
-    cv::GaussianBlur(jet_img, gaussian, cv::Size(9, 9), 5);
+    // 距離を示す円の描画
+    //cv::circle(jet_img,cv::Point(int(center[0]),int(center[1])),x_reso/2,cv::Scalar(255,255,255),1,cv::LINE_8);
+    //cv::circle(jet_img,cv::Point(int(center[0]),int(center[1])),x_reso/3,cv::Scalar(255,255,255),1,cv::LINE_8);
+    //cv::circle(jet_img,cv::Point(int(center[0]),int(center[1])),x_reso/6,cv::Scalar(255,255,255),1,cv::LINE_8);
     bridge.image=jet_img;
     bridge.encoding="bgr8";
     bridge.header.stamp=ros::Time::now();
 
     this->m_imgPub.publish(bridge.toImageMsg());
-    ROS_INFO("%d",ros::Time::now().sec);
+    //ROS_INFO("publish now");
+    // 角度を表す線の描画
+//    cv::line(jet_img,cv::Point(int(center[0])*2/3,0),cv::Point(int(center[0])*2/3,int(2*center[1])*2/3),cv::Scalar(255,255,255));
+//    cv::line(jet_img,cv::Point(0,int(center[1])*2/3),cv::Point(int(2*center[0])*2/3,int(center[1])*2/3),cv::Scalar(255,255,255));
+//    cv::line(jet_img,cv::Point(int(center[0])*2/3+int(center[0])*2/3*cos(pi/4),int(center[1])+int(center[1]*2/3)*sin(pi/4)),cv::Point(int(center[0]*2/3)-int(center[0])*2/3*cos(pi/4),int(center[1]*2/3)-int(center[1])*2/3*sin(pi/4)),cv::Scalar(255,255,255));
+//    cv::line(jet_img,cv::Point(int(center[0])*2/3+int(center[0])*2/3*cos(pi/4),int(center[1])-int(center[1]*2/3)*sin(pi/4)),cv::Point(int(center[0]*2/3)-int(center[0])*2/3*cos(pi/4),int(center[1]*2/3)+int(center[1])*2/3*sin(pi/4)),cv::Scalar(255,255,255));
+//    // 角度の文字の描画
+
+    //ガウシアン
+//    cv::Mat gaussian;
+//    cv::GaussianBlur(jet_img, gaussian, cv::Size(9, 9), 5);
 }
 
 int main(int argc, char **argv){
@@ -77,6 +78,9 @@ int main(int argc, char **argv){
     while(ros::ok()){
 
         ROS_INFO_THROTTLE(1, "%s", pingImageNode.state.data());
+        if(pingImageNode.state=="ACTIVE"){
+            pingImageNode.state="READY";
+        }
 
         ros::spinOnce();
         rate.sleep();

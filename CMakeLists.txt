@@ -22,8 +22,9 @@ catkin_package(
 add_executable(ping360_node
         src/ping360_node.cpp
         include/ping360_node.h
-        src/pingImage_node.cpp
-        include/pingImage_node.h )
+        #src/pingImage_node.cpp
+        #include/pingImage_node.h
+        )
 
 target_link_libraries(ping360_node
         ${catkin_LIBRARIES}

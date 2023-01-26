@@ -25,7 +25,7 @@ void Ping360_Node::set_default_setting() {
     m_sensorSettings.transmit_duration = 5;
     m_sensorSettings.sample_period = 80;
     m_sensorSettings.transmit_frequency = 750;
-    m_sensorSettings.num_points = 300;
+    m_sensorSettings.num_points = 1200;
     m_sensorSettings.transmit =1;
     m_sensorSettings.reserved =0;
 }
@@ -102,7 +102,7 @@ uint16_t* Ping360_Node::control_transducer(uint16_t angle) {
     _Wbuffer[23]=buf_H;
     m_serial.write(_Wbuffer,24);
     m_serial.waitReadable();
-    ros::Rate rate(20);
+    ros::Rate rate(9);
     rate.sleep();
 
     if(m_serial.available()){
