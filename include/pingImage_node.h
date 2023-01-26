@@ -25,6 +25,7 @@ public:
 
     cv_bridge::CvImage bridge;
     cv::Mat mat_image;
+    cv::Mat jet_image;
     void publishImage();
     const int x_reso=4*2*50;// 4*2*50だと描画に時間がかかる
     const int y_reso=4*2*50;//
@@ -32,9 +33,7 @@ public:
     float center[2]={float(x_reso/2),float(y_reso/2)};
     std::vector<float> deg;
     std::vector<float> r_dist;
-
     sensor_msgs::Image m_image;
-
 };
 
 
