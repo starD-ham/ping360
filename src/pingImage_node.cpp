@@ -7,7 +7,7 @@
 
 PingImage_node::PingImage_node() {
     this->m_echoSub = this->m_nh.subscribe("/echo",1000,&PingImage_node::echoCb, this);
-    this->m_imgPub=this->m_nh.advertise<sensor_msgs::Image>("/image_debug",1000);
+    this->m_imgPub=this->m_nh.advertise<sensor_msgs::Image>("/image_sonar",1000);
     mat_image = cv::Mat::zeros(cv::Size(x_reso,y_reso),CV_8U);
     publishImage();
     this->state="READY";
