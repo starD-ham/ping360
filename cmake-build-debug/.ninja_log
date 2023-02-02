@@ -1,15 +1,9 @@
 # ninja log v5
-3	4191	1674733059641112633	CMakeFiles/pingImage_node.dir/src/pingImage_node.cpp.o	f3af459c402dd757
+3	3571	1674733371369116438	CMakeFiles/pingImage_node.dir/src/pingImage_node.cpp.o	f3af459c402dd757
 1	5566	1674616506739381239	CMakeFiles/ping360_node.dir/src/pingImage_node.cpp.o	1086dd0de00b8361
-4191	4628	1674733060077112638	devel/lib/ping360/pingImage_node	202f2bf9de4888e6
-0	886	1674623898544500329	build.ninja	b762a690ac1348e4
+3571	3896	1674733371697116442	devel/lib/ping360/pingImage_node	202f2bf9de4888e6
+0	886	1675321176913370073	build.ninja	b762a690ac1348e4
 0	33	0	/home/hamada/catkin_ws/src/ping360/cmake-build-debug/CMakeFiles/clean_test_results	41ccdb05c6c719fc
 1677	1844	1674626743252535055	devel/lib/ping360/ping360_node	afa5f2f45ab1ede6
 2	1677	1674626743084535053	CMakeFiles/ping360_node.dir/src/ping360_node.cpp.o	d1e1dd6e627d7bfa
 0	33	0	CMakeFiles/clean_test_results	41ccdb05c6c719fc
-3	4443	1674733156345113813	CMakeFiles/pingImage_node.dir/src/pingImage_node.cpp.o	f3af459c402dd757
-4443	4864	1674733156765113819	devel/lib/ping360/pingImage_node	202f2bf9de4888e6
-4	4657	1674733247617114928	CMakeFiles/pingImage_node.dir/src/pingImage_node.cpp.o	f3af459c402dd757
-4658	5075	1674733248037114933	devel/lib/ping360/pingImage_node	202f2bf9de4888e6
-3	3571	1674733371369116438	CMakeFiles/pingImage_node.dir/src/pingImage_node.cpp.o	f3af459c402dd757
-3571	3896	1674733371697116442	devel/lib/ping360/pingImage_node	202f2bf9de4888e6
