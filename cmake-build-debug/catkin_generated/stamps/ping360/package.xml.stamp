@@ -61,6 +61,7 @@
   <depend>sensor_msgs</depend>
   <depend>Original_msgs</depend>
   <depend>geometry_msgs</depend>
+  <depend>ddynamic_reconfigure</depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

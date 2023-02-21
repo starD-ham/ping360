@@ -12,6 +12,11 @@
 #include "sensor_msgs/LaserScan.h"
 #include "Original_msgs/Ping360.h"
 
+// dynamic_reconfigure
+#include <dynamic_reconfigure/server.h>
+#include <ddynamic_reconfigure/ddynamic_reconfigure.h>
+
+
 
 class Ping360_Node {
 
@@ -21,7 +26,7 @@ public:
     ros::NodeHandle m_nh;
     ros::Publisher m_echoPub;
     ros::Publisher m_scanPub;
-    void publishEcho(uint16_t angle,std::vector<unsigned char> intensities);
+    void publishEcho(uint16_t angle, std::vector<signed char> intensities);
     void publishScan(double scan_time);
 
     serial::Serial m_serial;
@@ -54,21 +59,20 @@ public:
     uint16_t concatData(unsigned char data1, unsigned char data2);
 
     struct Ping360Setting{
-        uint8_t mode;
-        uint16_t transmit_duration;
-        uint8_t gain_setting;
-        uint16_t num_points;
-        uint16_t sample_period;
-        uint16_t transmit_frequency;
-        uint8_t transmit;
-        uint8_t reserved;
-
-        uint16_t start_angle = 0;
-        uint16_t end_angle = 0;
+        int mode;
+        int transmit_duration;
+        int gain_setting;
+        int num_points;
+        int sample_period;
+        int transmit_frequency;
+        int transmit;
+        int reserved;
+        int start_angle = 0;
+        int end_angle = 0;
     } m_sensorSettings;
 
-
-private:
+    void sonarParamInit(ros::NodeHandle &pnh);
+    void setDynamicParam(std::shared_ptr<ddynamic_reconfigure::DDynamicReconfigure>,const int,const int);
 };
 
 

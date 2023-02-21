@@ -14,9 +14,8 @@ Ping360_Node::Ping360_Node() {
     m_serial.setStopbits(serial::stopbits_one);
     serial::Timeout to = serial::Timeout::simpleTimeout(1000);
     m_serial.setTimeout(to);
-    m_serial.open();
+    //m_serial.open();
     sleep(1);
-    set_default_setting();
 }
 
 void Ping360_Node::set_default_setting() {
@@ -30,17 +29,45 @@ void Ping360_Node::set_default_setting() {
     m_sensorSettings.reserved =0;
 }
 
-void Ping360_Node::publishEcho(uint16_t angle,std::vector<unsigned char> intensities) {
+/// launch ファイルのパラメータの読み取り
+/// \param param 参照渡しされたパラメータの実体
+/// \param param_num パラメータの番号（headerのenumに対応）
+/// \param pnh launch
+void Ping360_Node::sonarParamInit(ros::NodeHandle &pnh) {
+    //pnh.getParam("Mode", param.);
+    pnh.getParam("Mode",(int &)m_sensorSettings.mode);
+    pnh.getParam("Gain", (int &) m_sensorSettings.gain_setting);
+    pnh.getParam("Transmit_duration",(int &)m_sensorSettings.transmit_duration);
+    pnh.getParam("Sample_period", (int &)m_sensorSettings.sample_period);
+    pnh.getParam("Transmit_frequency", (int &)m_sensorSettings.transmit_frequency);
+    pnh.getParam("Num_points",(int &)m_sensorSettings.num_points);
+    pnh.getParam("Start_angle", (int &)m_sensorSettings.start_angle);
+    pnh.getParam("End_angle",(int &)m_sensorSettings.end_angle);
+    pnh.getParam("Transmit",(int &)m_sensorSettings.transmit);
+}
+
+void Ping360_Node::setDynamicParam(std::shared_ptr<ddynamic_reconfigure::DDynamicReconfigure> ddr, const int min_val, const int max_val){
+    ddr->RegisterVariable(&m_sensorSettings.mode,"Mode",min_val,max_val);
+    ddr->RegisterVariable(&m_sensorSettings.gain_setting,"Gain",0,2);
+    ddr->RegisterVariable(&m_sensorSettings.transmit_duration,"Transmit_duration",1,1000);
+    ddr->RegisterVariable(&m_sensorSettings.sample_period,"Sample_period",80,40000);
+    ddr->RegisterVariable(&m_sensorSettings.transmit_frequency,"Transmit_frequency",500,1000);
+    ddr->RegisterVariable(&m_sensorSettings.num_points,"Num_points",200,1200);
+    ddr->RegisterVariable(&m_sensorSettings.start_angle,"start_angle",0,398);
+    ddr->RegisterVariable(&m_sensorSettings.end_angle,"End_angle",1,399);
+}
+
+void Ping360_Node::publishEcho(uint16_t angle, std::vector<signed char> intensities) {
     Original_msgs::Ping360 msg;
     msg.header.stamp=ros::Time::now();
     msg.angle=angle;
     msg.gain=m_sensorSettings.gain_setting;
     msg.number_of_samples=m_sensorSettings.num_points;
-    msg.sample_period=m_sensorSettings.sample_period*25*10^-9;
+    msg.sample_period=m_sensorSettings.sample_period;
     msg.transmit_frequency=m_sensorSettings.transmit_frequency;
-    msg.speed_of_sound =0;
-    msg.range = 0;
-    msg.intensities =intensities;
+    msg.speed_of_sound =1500;//[m/s]
+    msg.range = msg.speed_of_sound*(msg.sample_period*(25*10^-9))*msg.number_of_samples;
+    msg.intensities=intensities;
     m_echoPub.publish(msg);
 }
 
@@ -108,7 +135,7 @@ uint16_t* Ping360_Node::control_transducer(uint16_t angle) {
     if(m_serial.available()){
         _Rbuffer.data = m_serial.read(m_serial.available());
         std::vector<unsigned char> _buf_char(_Rbuffer.data.begin(),_Rbuffer.data.end());
-        std::vector<unsigned char> _intensity;
+        std::vector<signed char> _intensity;
         if(m_sensorSettings.num_points==(_buf_char.size()-24)){//前に22個、後ろに2個通信用のデータがくっついてくる
             for(int i=22;i<m_sensorSettings.num_points+22;i++){
                 _intensity.push_back(_buf_char.at(i));
@@ -150,8 +177,16 @@ uint16_t Ping360_Node::concatData(unsigned char data1, unsigned char data2) {
 int main(int argc, char **argv) {
 
     ros::init(argc,argv,"ping360_node");
+    ros::NodeHandle nh("ping360_node");
+    ros::NodeHandle pnh("~");
     Ping360_Node ping360Node;
 
+    //ddynamic reconfigureの設定
+    std::shared_ptr<ddynamic_reconfigure::DDynamicReconfigure> ddr;
+    ddr=std::make_shared<ddynamic_reconfigure::DDynamicReconfigure>(ros::NodeHandle(nh,"ping360_setting"));
+    ping360Node.sonarParamInit(pnh);
+    ping360Node.setDynamicParam(ddr,0,100);
+    while(true){}
 
     if(ping360Node.m_serial.isOpen()){
 

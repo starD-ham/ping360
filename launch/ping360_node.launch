@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+    <node name="ping360_node" pkg="ping360" type="ping360_node" output="screen">
+        <param name="Mode" value="1"/>
+        <param name="Gain" value="0"/>
+        <param name="Transmit_duration" value="5"/>
+        <param name="Sample_period" value="80"/>
+        <param name="Transmit_frequency" value="750"/>
+        <param name="Num_points" value="1200"/>
+        <param name="Start_angle" value="0"/>
+        <param name="End_angle" value="399"/>
+        <param name="Transmit" value="1"/>
+    </node>
+</launch>

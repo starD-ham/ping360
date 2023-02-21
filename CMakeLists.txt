@@ -10,13 +10,14 @@ find_package(catkin REQUIRED COMPONENTS
         sensor_msgs
         serial
         cv_bridge
+        ddynamic_reconfigure
 )
 
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES ping360
-#  CATKIN_DEPENDS roscpp rospy std_msgs
-#  DEPENDS system_lib
+  INCLUDE_DIRS include
+  LIBRARIES ping360
+  CATKIN_DEPENDS roscpp rospy std_msgs ddynamic_reconfigure
+  DEPENDS system_lib
 )
 
 add_executable(ping360_node

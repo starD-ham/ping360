@@ -3,6 +3,6 @@ prefix=/usr/local
 Name: ping360
 Description: Description of ping360
 Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib -lping360
+Requires: roscpp rospy std_msgs ddynamic_reconfigure

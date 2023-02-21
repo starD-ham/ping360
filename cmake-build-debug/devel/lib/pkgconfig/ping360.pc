@@ -3,6 +3,6 @@ prefix=/home/hamada/catkin_ws/src/ping360/cmake-build-debug/devel
 Name: ping360
 Description: Description of ping360
 Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
+Cflags: -I/home/hamada/catkin_ws/src/ping360/include
+Libs: -L${prefix}/lib -lping360
+Requires: roscpp rospy std_msgs ddynamic_reconfigure

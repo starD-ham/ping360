@@ -9,6 +9,7 @@
 #include "sensor_msgs/Image.h"
 #include "sensor_msgs/LaserScan.h"
 #include "cv_bridge/cv_bridge.h"
+#include "opencv2/opencv.hpp"
 #include "math.h"
 
 class PingImage_node {
@@ -17,14 +18,19 @@ public:
 
     ros::NodeHandle m_nh;
     ros::Subscriber m_echoSub;
-    ros::Publisher m_imgPub;
+    ros::Publisher m_sonar_gray_imgPub;
+    ros::Publisher m_sonar_jet_imgPub;
+    ros::Publisher m_sonar_data_Pub;
     void echoCb(const Original_msgs::Ping360::ConstPtr& msg);
 
-    cv_bridge::CvImage bridge;
+    cv_bridge::CvImage bridge_jet;
+    cv_bridge::CvImage bridge_original;
+    cv_bridge::CvImage bridge_data;
     cv::Mat mat_image;
+    cv::Mat data_image;//dataが挿入されたかどうかみるためのマトリクス
     void publishImage();
-    const int x_reso=4*2*50;
-    const int y_reso=4*2*50;
+    const int x_reso=2400;//1m:100pixel ->4mの範囲にしたい
+    const int y_reso=2400;
     const double pi = 2*acos(0.0);
     float center[2]={float(x_reso/2),float(y_reso/2)};
     std::vector<float> deg;
