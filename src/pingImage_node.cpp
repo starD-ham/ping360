@@ -12,7 +12,7 @@ PingImage_node::PingImage_node() {
     this->m_sonar_data_Pub=this->m_nh.advertise<sensor_msgs::Image>("/sonar_img/data_mat",1000);
     mat_image = cv::Mat::zeros(cv::Size(x_reso,y_reso),CV_8U);
     data_image = cv::Mat::zeros(cv::Size(x_reso,y_reso),CV_8U);
-    publishImage();
+    //publishImage();
 }
 
 void PingImage_node::echoCb(const Original_msgs::Ping360::ConstPtr &msg) {
@@ -51,13 +51,13 @@ void PingImage_node::echoCb(const Original_msgs::Ping360::ConstPtr &msg) {
 //            }
         }
     }
-    publishImage();
+    publishImage(2*pi*msg->angle/400.0);
     if(msg->angle>398){
         //cv::imwrite("/home/hamada/catkin_ws/src/ping360/image/"+ std::to_string(msg->header.stamp.toSec())+".jpg",mat_image);
     }
 }
 
-void PingImage_node::publishImage() {
+void PingImage_node::publishImage(float angle) {
 
 
     // カラーマップの描画
@@ -66,6 +66,9 @@ void PingImage_node::publishImage() {
     //cv::cvtColor(mat_image,gray_img,cv::COLOR_GRAY);
     gray_img=mat_image.clone();
 
+    double x = 1200*sin(angle+pi)+center[0];
+    double y = -1200*cos(angle+pi)+center[1];
+    cv::line(jet_img,cv::Point(center[0],center[1]),cv::Point(x,y),cv::Scalar(255,255,255),1,cv::LINE_4);
 //    // 距離を示す円の描画
 //    cv::circle(gray_img,cv::Point(int(center[0]),int(center[1])),x_reso/2,cv::Scalar(255,255,255),0,cv::LINE_8);
 //    cv::circle(gray_img,cv::Point(int(center[0]),int(center[1])),x_reso/3,cv::Scalar(255,255,255),0,cv::LINE_8);
@@ -76,6 +79,8 @@ void PingImage_node::publishImage() {
 //    float y_diff=0;//カメラとソナーのy位置
 //    cv::line(gray_img,cv::Point(int(center[0]-x_diff),int(center[1])),cv::Point(int(center[0]+center[1]*tan(camera_angle)-x_diff),0),cv::Scalar(255,255,255),1,cv::LINE_4);
 //    cv::line(gray_img,cv::Point(int(center[0]-x_diff),int(center[1])),cv::Point(int(center[0]+center[1]*tan(-camera_angle)-x_diff),0),cv::Scalar(255,255,255),1,cv::LINE_4);
+
+
 
     bridge_jet.image=jet_img;
     bridge_jet.encoding="bgr8";

@@ -28,7 +28,7 @@ public:
     cv_bridge::CvImage bridge_data;
     cv::Mat mat_image;
     cv::Mat data_image;//dataが挿入されたかどうかみるためのマトリクス
-    void publishImage();
+    void publishImage(float);
     const int x_reso=2400;//1m:100pixel ->4mの範囲にしたい
     const int y_reso=2400;
     const double pi = 2*acos(0.0);
